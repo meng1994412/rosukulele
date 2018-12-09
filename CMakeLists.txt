@@ -12,7 +12,7 @@ find_package(catkin REQUIRED COMPONENTS
   message_generation
   actionlib
   control_msgs
-  cvbridge
+  cv_bridge
   dynamic_reconfigure
   intera_core_msgs
   intera_interface
