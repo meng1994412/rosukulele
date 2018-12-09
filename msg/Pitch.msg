@@ -1,2 +1,2 @@
-int8 note
-int8 cents
+float32 note
+

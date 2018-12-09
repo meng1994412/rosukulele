@@ -108,6 +108,5 @@ while stream.is_active() and not rospy.is_shutdown():
             freq, note_name(n0), n-n0)
 
         # Publish in ROS
-        pitch.note = n0
-        pitch.cents = n-n0
+        pitch.note = n
         pitch_pub.publish(pitch)
