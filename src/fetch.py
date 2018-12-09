@@ -26,24 +26,29 @@ from geometry_msgs.msg import PoseStamped
 import PyKDL
 from tf_conversions import posemath
 from intera_interface import Limb
+from ar_track_alvar_msgs.msg import AlvarMarkers
 
 def main():
     """
     Move the robot arm to the specified configuration.
     Call using:
     $ rosrun intera_examples go_to_cartesian_pose.py  [arguments: see below]
+
     -p 0.4 -0.3 0.18 -o 0.0 1.0 0.0 0.0 -t right_hand
     --> Go to position: x=0.4, y=-0.3, z=0.18 meters
     --> with quaternion orientation (0, 1, 0, 0) and tip name right_hand
     --> The current position or orientation will be used if only one is provided.
+
     -q 0.0 -0.9 0.0 1.8 0.0 -0.9 0.0
     --> Go to joint angles: 0.0 -0.9 0.0 1.8 0.0 -0.9 0.0 using default settings
     --> If a Cartesian pose is not provided, Forward kinematics will be used
     --> If a Cartesian pose is provided, the joint angles will be used to bias the nullspace
+
     -R 0.01 0.02 0.03 0.1 0.2 0.3 -T
     -> Jog arm with Relative Pose (in tip frame)
     -> x=0.01, y=0.02, z=0.03 meters, roll=0.1, pitch=0.2, yaw=0.3 radians
     -> The fixed position and orientation paramters will be ignored if provided
+
     """
     arg_fmt = argparse.RawDescriptionHelpFormatter
     parser = argparse.ArgumentParser(formatter_class=arg_fmt,
@@ -52,10 +57,6 @@ def main():
         "-p", "--position", type=float,
         nargs='+',
         help="Desired end position: X, Y, Z")
-    parser.add_argument(
-        "-o", "--orientation", type=float,
-        nargs='+',
-        help="Orientation as a quaternion (x, y, z, w)")
     parser.add_argument(
         "-R", "--relative_pose", type=float,
         nargs='+',
@@ -67,21 +68,6 @@ def main():
         "-q", "--joint_angles", type=float,
         nargs='+', default=[],
         help="A list of joint angles, one for each of the 7 joints, J0...J6")
-    parser.add_argument(
-        "-t",  "--tip_name", default='right_hand',
-        help="The tip name used by the Cartesian pose")
-    parser.add_argument(
-        "--linear_speed", type=float, default=0.6,
-        help="The max linear speed of the endpoint (m/s)")
-    parser.add_argument(
-        "--linear_accel", type=float, default=0.6,
-        help="The max linear acceleration of the endpoint (m/s/s)")
-    parser.add_argument(
-        "--rotational_speed", type=float, default=1.57,
-        help="The max rotational speed of the endpoint (rad/s)")
-    parser.add_argument(
-        "--rotational_accel", type=float, default=1.57,
-        help="The max rotational acceleration of the endpoint (rad/s/s)")
     parser.add_argument(
         "--timeout", type=float, default=None,
         help="Max time in seconds to complete motion goal before returning. None is interpreted as an infinite timeout.")
@@ -95,10 +81,10 @@ def main():
         traj_options.interpolation_type = TrajectoryOptions.CARTESIAN
         traj = MotionTrajectory(trajectory_options = traj_options, limb = limb)
 
-        wpt_opts = MotionWaypointOptions(max_linear_speed=args.linear_speed,
-                                         max_linear_accel=args.linear_accel,
-                                         max_rotational_speed=args.rotational_speed,
-                                         max_rotational_accel=args.rotational_accel,
+        wpt_opts = MotionWaypointOptions(max_linear_speed=0.6,
+                                         max_linear_accel=0.6,
+                                         max_rotational_speed=1.57,
+                                         max_rotational_accel=1.57,
                                          max_joint_speed_ratio=1.0)
         waypoint = MotionWaypoint(options = wpt_opts.to_msg(), limb = limb)
 
@@ -108,18 +94,18 @@ def main():
             rospy.logerr('len(joint_angles) does not match len(joint_names!)')
             return None
 
-        if (args.position is None and args.orientation is None
+        if (args.position is None
             and args.relative_pose is None):
             if args.joint_angles:
                 # does Forward Kinematics
-                waypoint.set_joint_angles(args.joint_angles, args.tip_name, joint_names)
+                waypoint.set_joint_angles(args.joint_angles,'right_hand', joint_names)
             else:
                 rospy.loginfo("No Cartesian pose or joint angles given. Using default")
-                waypoint.set_joint_angles(joint_angles=None, active_endpoint=args.tip_name)
+                waypoint.set_joint_angles(joint_angles=None, active_endpoint='right_hand')
         else:
-            endpoint_state = limb.tip_state(args.tip_name)
+            endpoint_state = limb.tip_state('right_hand')
             if endpoint_state is None:
-                rospy.logerr('Endpoint state not found with tip name %s', args.tip_name)
+                rospy.logerr('Endpoint state not found with tip name %s', 'right_hand')
                 return None
             pose = endpoint_state.pose
 
@@ -147,14 +133,9 @@ def main():
                     pose.position.x = args.position[0]
                     pose.position.y = args.position[1]
                     pose.position.z = args.position[2]
-                if args.orientation is not None and len(args.orientation) == 4:
-                    pose.orientation.x = args.orientation[0]
-                    pose.orientation.y = args.orientation[1]
-                    pose.orientation.z = args.orientation[2]
-                    pose.orientation.w = args.orientation[3]
             poseStamped = PoseStamped()
             poseStamped.pose = pose
-            waypoint.set_cartesian_pose(poseStamped, args.tip_name, args.joint_angles)
+            waypoint.set_cartesian_pose(poseStamped, 'right_hand', args.joint_angles)
 
         rospy.loginfo('Sending waypoint: \n%s', waypoint.to_string())
 
