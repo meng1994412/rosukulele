@@ -30,7 +30,7 @@ from ar_track_alvar_msgs.msg import AlvarMarkers
 from rosukulele.srv import MoveTo
 
 
-def main_server():
+def main():
     """
     Move the robot arm to the specified configuration.
     Call using:
