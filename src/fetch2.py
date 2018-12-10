@@ -81,7 +81,9 @@ def moveTo(myArgs):
     parser.add_argument(
         "--timeout", type=float, default=None,
         help="Max time in seconds to complete motion goal before returning. None is interpreted as an infinite timeout.")
-    args = parser.parse_args(myArgs)
+    #args = parser.parse_args(myArgs.call)
+    test_string = ['-p','0.2', '0.3', '0.4']
+    args = parser.parse_args(test_string)
 
     try:
         limb = Limb()
