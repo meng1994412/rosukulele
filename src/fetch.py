@@ -30,7 +30,7 @@ from ar_track_alvar_msgs.msg import AlvarMarkers
 from rosukulele.srv import MoveTo
 
 
-def main():
+def main_server():
     """
     Move the robot arm to the specified configuration.
     Call using:
@@ -52,13 +52,25 @@ def main():
     -> The fixed position and orientation paramters will be ignored if provided
 
     """
+    rospy.init_node("fetch")
+    s = rospy.Service('move_to', MoveTo, moveTo)
+    print("Ready to call MoveTo")
+    rospy.spin()
+    
+    
+
+def moveTo(myArgs):
     arg_fmt = argparse.RawDescriptionHelpFormatter
     parser = argparse.ArgumentParser(formatter_class=arg_fmt,
-                                     description=main.__doc__)
+                                     description=main_server.__doc__)
     parser.add_argument(
         "-p", "--position", type=float,
         nargs='+',
         help="Desired end position: X, Y, Z")
+    parser.add_argument(
+        "-o", "--orientation", type=float,
+        nargs='+',
+        help="Orientation as a quaternion (x, y, z, w)")
     parser.add_argument(
         "-R", "--relative_pose", type=float,
         nargs='+',
@@ -73,10 +85,12 @@ def main():
     parser.add_argument(
         "--timeout", type=float, default=None,
         help="Max time in seconds to complete motion goal before returning. None is interpreted as an infinite timeout.")
-    args = parser.parse_args(rospy.myargv()[1:])
+    args = parser.parse_args(myArgs.call.split(" "))
+    print(args.position)
+    #test_string = ['-p','0.5', '0.3', '0.5']
+    #args = parser.parse_args(test_string)
 
     try:
-        rospy.init_node("fetch")
         limb = Limb()
 
         traj_options = TrajectoryOptions()
@@ -96,7 +110,7 @@ def main():
             rospy.logerr('len(joint_angles) does not match len(joint_names!)')
             return None
 
-        if (args.position is None
+        if (args.position is None and args.orientation is None
             and args.relative_pose is None):
             if args.joint_angles:
                 # does Forward Kinematics
@@ -135,6 +149,11 @@ def main():
                     pose.position.x = args.position[0]
                     pose.position.y = args.position[1]
                     pose.position.z = args.position[2]
+                if args.orientation is not None and len(args.orientation) == 4:
+                    pose.orientation.x = args.orientation[0]
+                    pose.orientation.y = args.orientation[1]
+                    pose.orientation.z = args.orientation[2]
+                    pose.orientation.w = args.orientation[3]
             poseStamped = PoseStamped()
             poseStamped.pose = pose
             waypoint.set_cartesian_pose(poseStamped, 'right_hand', args.joint_angles)
@@ -158,4 +177,4 @@ def main():
 
 
 if __name__ == '__main__':
-    main()
+    main_server()
