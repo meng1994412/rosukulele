@@ -52,13 +52,6 @@ def main_server():
     -> The fixed position and orientation paramters will be ignored if provided
 
     """
-    rospy.init_node("fetch")
-    s = rospy.Service('move_to', MoveTo, moveTo)
-    rospy.spin()
-    print("Ready to call MoveTo")
-    
-
-def moveTo(myArgs):
     arg_fmt = argparse.RawDescriptionHelpFormatter
     parser = argparse.ArgumentParser(formatter_class=arg_fmt,
                                      description=main.__doc__)
@@ -80,9 +73,10 @@ def moveTo(myArgs):
     parser.add_argument(
         "--timeout", type=float, default=None,
         help="Max time in seconds to complete motion goal before returning. None is interpreted as an infinite timeout.")
-    args = parser.parse_args(myArgs)
+    args = parser.parse_args(rospy.myarg[1:]())
 
     try:
+        rospy.init_node("fetch")
         limb = Limb()
 
         traj_options = TrajectoryOptions()
@@ -164,4 +158,4 @@ def moveTo(myArgs):
 
 
 if __name__ == '__main__':
-    main_server()
+    main()
