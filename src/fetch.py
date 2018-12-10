@@ -73,7 +73,7 @@ def main():
     parser.add_argument(
         "--timeout", type=float, default=None,
         help="Max time in seconds to complete motion goal before returning. None is interpreted as an infinite timeout.")
-    args = parser.parse_args(rospy.myarg[1:]())
+    args = parser.parse_args(rospy.myargv()[1:])
 
     try:
         rospy.init_node("fetch")
