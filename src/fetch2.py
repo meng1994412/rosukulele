@@ -62,7 +62,7 @@ def main_server():
 def moveTo(myArgs):
     arg_fmt = argparse.RawDescriptionHelpFormatter
     parser = argparse.ArgumentParser(formatter_class=arg_fmt,
-                                     description=main.__doc__)
+                                     description=main_server.__doc__)
     parser.add_argument(
         "-p", "--position", type=float,
         nargs='+',
@@ -81,9 +81,10 @@ def moveTo(myArgs):
     parser.add_argument(
         "--timeout", type=float, default=None,
         help="Max time in seconds to complete motion goal before returning. None is interpreted as an infinite timeout.")
-    #args = parser.parse_args(myArgs.call)
-    test_string = ['-p','0.2', '0.3', '0.4']
-    args = parser.parse_args(test_string)
+    args = parser.parse_args(myArgs.call.split(" "))
+    print(args.position)
+    #test_string = ['-p','0.5', '0.3', '0.5']
+    #args = parser.parse_args(test_string)
 
     try:
         limb = Limb()
