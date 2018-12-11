@@ -11,7 +11,7 @@ You can find the pkg here:https://github.com/ros-perception/ar_track_alvar.
 	<arg name="rot" default = "0"/>
 
 	<arg name="cam_image_topic" default="/io/internal_camera/head_camera/image_rect_color" />
-	<arg name="cam_info_topic" default="/io/internal_camera/head_camera/camera_info" />
+	<arg name="cam_info_topic" default="/camera_info" />
 	<arg name="output_frame" default="reference/base" />
 
 	<node name="ar_track_alvar" pkg="ar_track_alvar" type="individualMarkersNoKinect" respawn="false" output="screen">
