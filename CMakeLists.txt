@@ -65,6 +65,7 @@ find_package(catkin REQUIRED COMPONENTS
  add_service_files(
    FILES
    MoveTo.srv
+   Grip.srv
  )
 
 ## Generate actions in the 'action' folder

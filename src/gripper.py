@@ -17,7 +17,6 @@
 """
 SDK Gripper Example: keyboard
 """
-import argparse
 
 import rospy
 
@@ -42,15 +41,8 @@ def main():
 
 def gripper(limb,bool):
     # initialize interfaces
-    print("Getting robot state...")
-    rs = intera_interface.RobotEnable(CHECK_VERSION)
-    init_state = rs.state()
     gripper = None
-    original_deadzone = None
-    def clean_shutdown():
-        if gripper and original_deadzone:
-            gripper.set_dead_zone(original_deadzone)
-        print("Exiting example.")
+    
     try:
         gripper = intera_interface.Gripper(limb + '_gripper')
     except (ValueError, OSError) as e:
@@ -58,46 +50,45 @@ def gripper(limb,bool):
         clean_shutdown()
         return
     rospy.on_shutdown(clean_shutdown)
-
-    original_deadzone = gripper.get_dead_zone()
     # WARNING: setting the deadzone below this can cause oscillations in
     # the gripper position. However, setting the deadzone to this
     # value is required to achieve the incremental commands in this example
     gripper.set_dead_zone(0.001)
     rospy.loginfo("Gripper deadzone set to {}".format(gripper.get_dead_zone()))
     if bool:
-  		gripper.close()
-  	else:
-  		gipper.open()
+        gripper.close()
+    else:
+        gipper.open()
     # force shutdown call if caught by key handler
     rospy.signal_shutdown("Gripper moved.")
 
 
 def letsgrip(myArgs):
-    arg_fmt = argparse.RawDescriptionHelpFormatter
-    parser = argparse.ArgumentParser(formatter_class=arg_fmt,
-                                     description=main.__doc__,
-                                     epilog=epilog)
-    parser.add_argument(
-        "-l", "--limb", dest="limb", default=valid_limbs[0],
-        choices=valid_limbs,
-        help="Limb on which to run the gripper keyboard example"
-    )
-    parser.add_argument(
-        "-c", "--close", type=string,
-        nargs='+',
-        help="close gripper")
-    parser.add_argument(
-        "-o", "--open", type=string,
-        nargs='+',
-        help="open gripper")
-    args = parser.parse_args(myArgs.grip.split(" "))
-    print("To grip or not to grip")
+    # arg_fmt = argparse.RawDescriptionHelpFormatter
+    # parser = argparse.ArgumentParser(formatter_class=arg_fmt,
+    #                                  description=main.__doc__,
+    #                                  epilog=epilog)
+    # parser.add_argument(
+    #     "-l", "--limb", dest="limb", default=valid_limbs[0],
+    #     choices=valid_limbs,
+    #     help="Limb on which to run the gripper keyboard example"
+    # )
+    # parser.add_argument(
+    #     "-c", "--close", type=string,
+    #     nargs='+',
+    #     help="close gripper")
+    # parser.add_argument(
+    #     "-o", "--open", type=string,
+    #     nargs='+',
+    #     help="open gripper")
+    # args = parser.parse_args(myArgs.grip.split(" "))
+    # print("To grip or not to grip")
 
-    if args.close is not None and args.open is None:
-	    gripper(args.limb,True)
-	if args.open is not None and args.close is None:
-		gripper(args.limb,False)
+    
+    if myArgs.grip == 'c':
+        gripper(valid_limbs[0],True)
+    else:
+        gripper(valid_limbs[0],False)
 
 
 
