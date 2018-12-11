@@ -26,12 +26,9 @@ from geometry_msgs.msg import PoseStamped
 import PyKDL
 from tf_conversions import posemath
 from intera_interface import Limb
-from ar_track_alvar_msgs.msg import AlvarMarkers
 from rosukulele.srv import MoveTo
 
-
-def main_server():
-    """
+"""
     Move the robot arm to the specified configuration.
     Call using:
     $ rosrun intera_examples go_to_cartesian_pose.py  [arguments: see below]
@@ -52,6 +49,9 @@ def main_server():
     -> The fixed position and orientation paramters will be ignored if provided
 
     """
+
+
+def main_server():
     rospy.init_node("fetch")
     s = rospy.Service('move_to', MoveTo, moveTo)
     print("Ready to call MoveTo")
