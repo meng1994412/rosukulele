@@ -21,8 +21,9 @@ SDK Gripper Example: keyboard
 import rospy
 
 import intera_interface
-import intera_external_devices
+
 from intera_interface import CHECK_VERSION
+from rosukulele.srv import Grip
 
 
 def main():
@@ -35,16 +36,20 @@ def main():
         return
     print("Initializing node... ")
     rospy.init_node("gripper")
-    s = rospy.Service('move_to', Grip, gripper)
+    s = rospy.Service('grip_pls', Grip, letsgrip)
     print("Ready to call Grip")
     rospy.spin()
 
-def gripper(limb,bool):
+def grips(b):
     # initialize interfaces
     gripper = None
-    
+    original_deadzone = None
+    def clean_shutdown():
+        if gripper and original_deadzone:
+            gripper.set_dead_zone(original_deadzone)
+        print("Exiting example.") 
     try:
-        gripper = intera_interface.Gripper(limb + '_gripper')
+        gripper = intera_interface.Gripper('right_gripper')
     except (ValueError, OSError) as e:
         rospy.logerr("Could not detect an electric gripper attached to the robot.")
         clean_shutdown()
@@ -55,13 +60,12 @@ def gripper(limb,bool):
     # value is required to achieve the incremental commands in this example
     gripper.set_dead_zone(0.001)
     rospy.loginfo("Gripper deadzone set to {}".format(gripper.get_dead_zone()))
-    if bool:
+    if b:
         gripper.close()
     else:
-        gipper.open()
+        gripper.open()
     # force shutdown call if caught by key handler
-    rospy.signal_shutdown("Gripper moved.")
-
+    
 
 def letsgrip(myArgs):
     # arg_fmt = argparse.RawDescriptionHelpFormatter
@@ -82,13 +86,13 @@ def letsgrip(myArgs):
     #     nargs='+',
     #     help="open gripper")
     # args = parser.parse_args(myArgs.grip.split(" "))
-    # print("To grip or not to grip")
+    print("To grip or not to grip")
 
     
     if myArgs.grip == 'c':
-        gripper(valid_limbs[0],True)
+        grips(True)
     else:
-        gripper(valid_limbs[0],False)
+        grips(False)
 
 
 
