@@ -1,0 +1,37 @@
+<!--
+    This launch file is to launch the ar_track_alvar pkg and relative paremeters. If it catch the position of the tag, it will publish a /ar_track_pose topic which has the ar tag pose on it. 
+You can find the pkg here:https://github.com/ros-perception/ar_track_alvar.
+-->
+
+<launch>
+	<arg name="marker_size" default="11.994" />
+	<arg name="max_new_marker_error" default="0.08" />
+	<arg name="max_track_error" default="0.2" />
+	<arg name="trans" default = "0"/>
+	<arg name="rot" default = "0"/>
+
+	<arg name="cam_image_topic" default="/io/internal_camera/head_camera/image_rect_color" />
+	<arg name="cam_info_topic" default="/io/internal_camera/head_camera/camera_info" />
+	<arg name="output_frame" default="reference/base" />
+
+	<node name="ar_track_alvar" pkg="ar_track_alvar" type="individualMarkersNoKinect" respawn="false" output="screen">
+		<param name="marker_size"           type="double" value="$(arg marker_size)" />
+		<param name="max_new_marker_error"  type="double" value="$(arg max_new_marker_error)" />
+		<param name="max_track_error"       type="double" value="$(arg max_track_error)" />
+		<param name="output_frame"          type="string" value="$(arg output_frame)" />
+
+		<remap from="camera_image"  to="$(arg cam_image_topic)" />
+		<remap from="camera_info"   to="$(arg cam_info_topic)" />
+	</node>
+
+	<node pkg="rosukulele" type="transform.py" name="transform">
+		<param name = "trans" value = "$(arg trans)"/>
+		<param name = "rot" value = "$(arg rot)"/>
+	</node>
+
+	<node pkg="tf" type="static_transform_publisher" name="new_broad" args="1 0 0 0 0 0 1 base new 100" />
+
+	<node pkg="rviz" type="rviz" name="rviz" />
+
+</launch>
+
