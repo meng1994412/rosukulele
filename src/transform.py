@@ -28,29 +28,16 @@ global T
 
 def transform_matrix(myArgs):
 	global T
-	new = myArgs.call.split(" ")
-	x_n =eval(new[0])
-	y_n =eval(new[1])
-	z_n =eval(new[2])
-	new = np.array([[x_n],[y_n],[z_n],[1]])
-
-
-	new_point = np.matmul(T,new)
-	new_point_str = str(new_point[0]) +" "+str(new_point[1]) +" "+str(new_point[2])
-	print(new_point_str)
-	return new_point_str
-
-def main():
-	global T
-	rospy.init_node('uku_tf_listener')
-
-
-	listener = tf.TransformListener()
-
+	count = 0
 	rate = rospy.Rate(10.0)
-	while not rospy.is_shutdown():
+	listener = tf.TransformListener()
+	listener.waitForTransform("/base", "/ar_marker_2", rospy.Time(), rospy.Duration(4.0))
+	while not rospy.is_shutdown() and count < 50000:
 		try:
+			now = rospy.Time.now()
+			listener.waitForTransform("/base", "/ar_marker_2", now, rospy.Duration(2.0))
 			(trans,rot) = listener.lookupTransform('/base', '/ar_marker_2', rospy.Time(0))
+			
 			# rospy.set_param('~trans', trans)
 			# rospy.set_param('~rot', rot)
 			q1 = rot[0]
@@ -60,23 +47,51 @@ def main():
 			tx = trans[0]
 			ty = trans[1]
 			tz = trans[2]
-
 			T = np.array([
 						  [(1-2*(q2**2 + q3**2)), (2*(q1*q2 -q0*q3)), (2*(q0*q2 + q1*q3)), tx],
 						  [(2*(q1*q2 +q0*q3)), (1-2*(q1**2 +q3**2)), (2*(q2*q3 - q0*q1)),ty],
 						  [(2*(q1*q3-q0*q2)), (2*(q0*q1 +q2*q3)), (1-2*(q1**2+q2**2)), tz],
 						  [0, 0, 0, 1]
-						  ])    
+						  ])
+			
+			new = myArgs.call.split(" ")
+			x_n =eval(new[0])
+			y_n =eval(new[1])
+			z_n =eval(new[2])
+			new = np.array([[x_n],[y_n],[z_n],[1]])
 
-			s = rospy.Service('transformation_matrix', Transform, transform_matrix)
-			print("Ready to call Transform")
-			rospy.spin()
 
+			new_point = np.matmul(T,new)
+			new_point_str = str(new_point[0][0]) +" "+str(new_point[1][0]) +" "+str(new_point[2][0])
+			print(new_point_str)
+			
+			return new_point_str
 		except (tf.LookupException, tf.ConnectivityException, tf.ExtrapolationException):
 			#print("tf error")
+			count+=1
+			print(count)
 			continue
-		# rospy.Subscriber("/ar_pose_marker",AlvarMarkers, callback)
-		# rate.sleep()
+		rospy.sleep(rate)
+
+	#if using old t
+	print("using old T")
+	new = myArgs.call.split(" ")
+	x_n =eval(new[0])
+	y_n =eval(new[1])
+	z_n =eval(new[2])
+	new = np.array([[x_n],[y_n],[z_n],[1]])
+	new_point = np.matmul(T,new)
+	new_point_str = str(new_point[0][0]) +" "+str(new_point[1][0]) +" "+str(new_point[2][0])
+	print(new_point_str)
+	return new_point_str
+
+
+def main():
+	rospy.init_node('uku_tf_listener')
+
+	s = rospy.Service('transformation_matrix', Transform, transform_matrix)
+	print("Ready to call Transform")
+	rospy.spin()
 
 
 
