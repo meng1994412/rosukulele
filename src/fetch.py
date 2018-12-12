@@ -97,10 +97,10 @@ def moveTo(myArgs):
         traj_options.interpolation_type = TrajectoryOptions.CARTESIAN
         traj = MotionTrajectory(trajectory_options = traj_options, limb = limb)
 
-        wpt_opts = MotionWaypointOptions(max_linear_speed=0.6,
-                                         max_linear_accel=0.6,
+        wpt_opts = MotionWaypointOptions(max_linear_speed=0.4,
+                                         max_linear_accel=0.4,
                                          max_rotational_speed=1.57,
-                                         max_rotational_accel=1.57,
+                                         max_rotational_accel=1.5,
                                          max_joint_speed_ratio=1.0)
         waypoint = MotionWaypoint(options = wpt_opts.to_msg(), limb = limb)
 
@@ -108,7 +108,7 @@ def moveTo(myArgs):
 
         if args.joint_angles and len(args.joint_angles) != len(joint_names):
             rospy.logerr('len(joint_angles) does not match len(joint_names!)')
-            return None
+            return "failed"
 
         if (args.position is None and args.orientation is None
             and args.relative_pose is None):
@@ -122,13 +122,13 @@ def moveTo(myArgs):
             endpoint_state = limb.tip_state('right_hand')
             if endpoint_state is None:
                 rospy.logerr('Endpoint state not found with tip name %s', 'right_hand')
-                return None
+                return "failed"
             pose = endpoint_state.pose
 
             if args.relative_pose is not None:
                 if len(args.relative_pose) != 6:
                     rospy.logerr('Relative pose needs to have 6 elements (x,y,z,roll,pitch,yaw)')
-                    return None
+                    return "failed"
                 # create kdl frame from relative pose
                 rot = PyKDL.Rotation.RPY(args.relative_pose[3],
                                          args.relative_pose[4],
@@ -165,16 +165,19 @@ def moveTo(myArgs):
         result = traj.send_trajectory(timeout=args.timeout)
         if result is None:
             rospy.logerr('Trajectory FAILED to send')
-            return
+            return 'Trajectory FAILED to send'
 
         if result.result:
             rospy.loginfo('Motion controller successfully finished the trajectory!')
+            return 'Motion Success'
         else:
             rospy.logerr('Motion controller failed to complete the trajectory with error %s',
                          result.errorId)
+            return result.errorId
+
     except rospy.ROSInterruptException:
         rospy.logerr('Keyboard interrupt detected from the user. Exiting before trajectory completion.')
-
+    return "failed"
 
 if __name__ == '__main__':
     main_server()

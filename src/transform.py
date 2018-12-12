@@ -31,11 +31,11 @@ def transform_matrix(myArgs):
 	count = 0
 	rate = rospy.Rate(10.0)
 	listener = tf.TransformListener()
-	listener.waitForTransform("/base", "/ar_marker_2", rospy.Time(), rospy.Duration(4.0))
-	while not rospy.is_shutdown() and count < 50000:
+	# listener.waitForTransform("/base", "/ar_marker_2", rospy.Time(), rospy.Duration(4.0))
+	while not rospy.is_shutdown() and count < 30000:
 		try:
 			now = rospy.Time.now()
-			listener.waitForTransform("/base", "/ar_marker_2", now, rospy.Duration(2.0))
+			# listener.waitForTransform("/base", "/ar_marker_2", now, rospy.Duration(2.0))
 			(trans,rot) = listener.lookupTransform('/base', '/ar_marker_2', rospy.Time(0))
 			
 			# rospy.set_param('~trans', trans)

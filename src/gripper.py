@@ -53,7 +53,7 @@ def grips(b):
     except (ValueError, OSError) as e:
         rospy.logerr("Could not detect an electric gripper attached to the robot.")
         clean_shutdown()
-        return
+        return 'gripper failure'
     rospy.on_shutdown(clean_shutdown)
     # WARNING: setting the deadzone below this can cause oscillations in
     # the gripper position. However, setting the deadzone to this
@@ -64,6 +64,7 @@ def grips(b):
         gripper.close()
     else:
         gripper.open()
+    return "Gripper Success"
     # force shutdown call if caught by key handler
     
 

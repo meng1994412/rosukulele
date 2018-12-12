@@ -1,5 +1,5 @@
 <launch>
-	<arg name="setup_only" default="true"/>
+	<arg name="setup_only" default="false"/>
 	<arg name="ar" default="true"/>
 	<arg name="camera" default = "narrow_stereo"/>
 

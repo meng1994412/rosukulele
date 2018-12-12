@@ -1,23 +1,27 @@
 #! /usr/bin/env python
 import rospy
 from rosukulele.srv import *
+OFFSET_ABSOLUTE = [0.000,0.015,0]
 
-NEUTRAL_LOC = [0,0,0]
+NEUTRAL_LOC = [0,-0.25,0.4]
 ORIENTATIONS = ['0 1 0 0', '-0.5 -0.5 0.5 -0.5'] #0 down, 1 sideways
 
-STRING_APPROACH = [0,0,0]
-STRING_LOC = [[0,0,0],[1,1,1],[2,2,2],[3,3,3],[4,4,4]]
+STRING_APPROACH = [-0.02,-0.366,0.2]
+STRING_LOC = [[[-0.02, -0.363, 0.1467],[-0.02,-0.39,0.1467]],\
+	[[-0.02,-0.3614,0.1465],[-0.02,-0.385,0.1465]],\
+	[[-0.02,-0.3485,0.1465],[-0.02,-0.376,0.1465]],\
+	[[-0.02,-0.333,0.1465],[-0.02,-0.359,0.1465]]]
 
 PICK_APPROACH = [-0.1,0.035,0.43]
-PICK_LOC = [-0.1,0.035,0.22]
+PICK_LOC = [-0.1,0.046,0.21]
 
-TUNER_APPROACH = [-0.099,-0.05,0.43]
-TUNER_LOC = [-0.099,-0.05,0.22]
+TUNER_APPROACH = [-0.095,-0.05,0.43]
+TUNER_LOC = [-0.095,-0.035,0.205]
 
-HEAD_LOC = [0,0,0]
+HEAD_LOC = [0.25,-0.36,0.3]
 
-PEG_APPROACH = [[0,0,0],[1,1,1],[2,2,2],[3,3,3],[4,4,4]]
-PEG_LOC = [[0,0,0],[1,1,1],[2,2,2],[3,3,3],[4,4,4]]
+PEG_APPROACH = [[0.28,-0.45,0.073],[1,1,1],[2,2,2],[3,3,3],[4,4,4]]
+PEG_LOC = [[0.28,-0.39,0.07],[1,1,1],[2,2,2],[3,3,3],[4,4,4]]
 
 STRING_NAME = ['A', 'E', 'C', 'G']
 PITCHES = [69, 64, 60, 67]
@@ -33,25 +37,41 @@ def main():
 	#move to an absolute location
 	#TODO
 
-	for currentString in range(0,1):
-		#check initial pitch
-		toPick('c')
-		error = pluck(currentString)
-		toPick('o')
+	# for currentString in range(0,1):
+	# 	#check initial pitch
+	# 	toPick('c')
+	# 	error = pluck(currentString)
+	# 	toPick('o')
 
-		while (error > PITCH_TOL):
-			#correct pitch
-			toTuner('c')
-			tune(currentString, error)
-			toTuner('o')
+	# 	while (error > PITCH_TOL):
+	# 		#correct pitch
+	# 		toTuner('c')
+	# 		tune(currentString, error)
+	# 		toTuner('o')
 
-			#check new pitch
-			toPick('c')
-			error = pluck(currentString)
-			toPick('o')
+	# 		#check new pitch
+	# 		toPick('c')
+	# 		error = pluck(currentString)
+	# 		toPick('o')
 
-		print("The "+STRING_NAME[currentString]+" String is in tune!")
-
+	# 	print("The "+STRING_NAME[currentString]+" String is in tune!")
+	#*************************************Grip blocks*************************************
+	# moveLoc(NEUTRAL_LOC)
+	# toPick('c')
+	# toPick("o")
+	# moveLoc(NEUTRAL_LOC)
+	# toTuner("c")
+	# toTuner("o")
+	# **************************************************************************************
+	moveLoc(NEUTRAL_LOC)
+	grip('o')
+	toPick('c')
+	print("Note Error")
+	print(pluck(0))
+	toPick('o')
+	toTuner('c')
+	tune(0,1)
+	toTuner('o')
 
 
 
@@ -79,8 +99,8 @@ def pluck(currentString):
 
 	setOrientation(1)
 	moveLoc(STRING_APPROACH)
-	moveLoc(STRING_LOC[currentString])
-	moveLoc(SRING_LOC[currentString+1])
+	moveLoc(STRING_LOC[currentString][0])
+	moveLoc(STRING_LOC[currentString][1])
 	pitch = getPitch(0)
 	error = pitch - PITCHES[currentString]
 	moveLoc(STRING_APPROACH)
@@ -94,15 +114,15 @@ def tune(currentString, error):
 	setOrientation(1)
 	moveLoc(HEAD_LOC)
 	moveLoc(PEG_APPROACH[currentString])
-	rotate(pegAngle[currentString])
+	#rotate(pegAngle[currentString])
 
 	moveLoc(PEG_LOC[currentString])
 	rad = PGAIN*error; #should really be some other function of error
 	rotate(rad)
-	pegAngle[currentString]+=rad
+	#pegAngle[currentString]+=rad
 	moveLoc(PEG_APPROACH[currentString])
 	moveLoc(HEAD_LOC)
-	moeLoc(NEUTRAL_LOC)
+	moveLoc(NEUTRAL_LOC)
 
 def grip(state):
 	#closes or opens the gripper. 'o' opens and 'c' closes
@@ -110,19 +130,25 @@ def grip(state):
 	try:
 		grip_handle=rospy.ServiceProxy('grip_pls', Grip)
 		reply = grip_handle(state)
-		return reply.success
+		print reply.success
+		return 
 	except rospy.ServiceException, e:
 		print "Service call failed: %s"%e
 
 def moveLoc(locArray):
 	#Moves to a location defined by a 3 length array in the Uke frame
+	# locArray[0]+=OFFSET_ABSOLUTE[0]
+	# locArray[1]+=OFFSET_ABSOLUTE[1]
+	# locArray[2]+=OFFSET_ABSOLUTE[2]
+
 	locString = ukeToBase(locArray)
 	msg = '-p '+ locString;
 	rospy.wait_for_service('move_to')
 	try:
 		grip_handle=rospy.ServiceProxy('move_to', MoveTo)
 		reply = grip_handle(msg)
-		return reply.response
+		print reply.response
+		return
 	except rospy.ServiceException, e:
 		print "Service call failed: %s"%e
 
@@ -135,21 +161,23 @@ def setOrientation(orient):
 			grip_handle=rospy.ServiceProxy('move_to', MoveTo)
 			reply = grip_handle(msg)
 			currentOrientation = orient
-			return reply.response
+			print reply.response
+			return
 		except rospy.ServiceException, e:
 			print "Service call failed: %s"%e
 	
 def rotate(rad):
-	#Moves to a location defined by a 3 length array
+	#A Positive rotation tunes up
 	global currentOrientation
 	currentOrientation = -1
 
-	rotation = '-R -T 0 0 0 0 0 '+str(rad)
+	rotation = '-T -R 0 0 0 0 0 '+str(rad)
 	rospy.wait_for_service('move_to')
 	try:
 		grip_handle=rospy.ServiceProxy('move_to', MoveTo)
 		reply = grip_handle(rotation)
-		return reply.response
+		print reply.response
+		return
 	except rospy.ServiceException, e:
 		print "Service call failed: %s"%e
 
