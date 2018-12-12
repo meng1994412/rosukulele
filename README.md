@@ -41,27 +41,12 @@ The expectation is to have a tuned ukulele at the end of the all of these steps.
 
 [GetPitch.srv](https://github.com/zigzaugg/rosukulele/blob/master/srv/GetPitch.srv) - This service file defines the `get_pitch` service.
 
-  int8 numSamples
-  ---
-  float32 pitch
-
 [Grip.srv](https://github.com/zigzaugg/rosukulele/blob/master/srv/Grip.srv) - This service file defines the `grip_pls` service.
-
-  string grip
-  ---
-  string success
 
 [MoveTo.srv](https://github.com/zigzaugg/rosukulele/blob/master/srv/MoveTo.srv) - This service file defines the `move_to` service.
 
-  string call
-  ---
-  string response
-
 [Transform.srv](https://github.com/zigzaugg/rosukulele/blob/master/srv/Transform.srv) - This service file defines the `transformation_matrix` service.
 
-  string call
-  ---
-  string response
 
 ## Launch Files
 
