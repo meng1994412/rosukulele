@@ -3,6 +3,7 @@ import rospy
 from rosukulele.srv import *
 
 NEUTRAL_LOC = [0,0,0]
+ORIENTATIONS = ['0 1 0 0', '-0.5 -0.5 0.5 -0.5'] #0 down, 1 sideways
 
 STRING_APPROACH = [0,0,0]
 STRING_LOC = [[0,0,0],[1,1,1],[2,2,2],[3,3,3],[4,4,4]]
@@ -50,6 +51,7 @@ def main():
 
 def toPick(state):
 	#move to and grab/set down pick. 'o' opens and 'c' closes
+	setOrientation(0)
 	moveLoc(PICK_APPROACH)
 	moveLoc(PICK_LOC)
 	grip(state)
@@ -58,6 +60,7 @@ def toPick(state):
 
 def toTuner(state):
 	#move to and grab/set down tuner. 'o' opens and 'c' closes
+	setOrientation(0)
 	moveLoc(TUNER_APPROACH)
 	moveLoc(TUNER_LOC)
 	grip(state)
@@ -65,6 +68,7 @@ def toTuner(state):
 	moveLoc(NEUTRAL_LOC)
 
 def pluck(currentString):
+	setOrientation(1)
 	moveLoc(STRING_APPROACH)
 	moveLoc(STRING_LOC[currentString])
 	moveLoc(SRING_LOC[currentString+1])
@@ -75,15 +79,16 @@ def pluck(currentString):
 	return error
 
 def tune(currentString, error):
+	PGAIN = 1
+	setOrientation(1)
 	moveLoc(HEAD_LOC)
 	moveLoc(PEG_APPROACH[currentString])
 	moveLoc(PEG_LOC[currentString])
-	rad = error; #should really be some other function of error
+	rad = PGAIN*error; #should really be some other function of error
 	rotate(rad)
 	moveLoc(PEG_APPROACH[currentString])
 	moveLoc(HEAD_LOC)
 	moeLoc(NEUTRAL_LOC)
-
 
 def grip(state):
 	#closes or opens the gripper. 'o' opens and 'c' closes
@@ -107,6 +112,16 @@ def moveLoc(locArray):
 	except rospy.ServiceException, e:
 		print "Service call failed: %s"%e
 
+def setOrientation(orient):
+	
+	msg = '-o '+ ORIENTATIONS[orient];
+	rospy.wait_for_service('move_to')
+	try:
+		grip_handle=rospy.ServiceProxy('move_to', MoveTo)
+		reply = grip_handle(msg)
+		return reply.response
+	except rospy.ServiceException, e:
+		print "Service call failed: %s"%e
 	
 def rotate(rad):
 	#Moves to a location defined by a 3 length array
