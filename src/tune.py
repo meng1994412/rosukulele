@@ -23,10 +23,16 @@ STRING_NAME = ['A', 'E', 'C', 'G']
 PITCHES = [69, 64, 60, 67]
 PITCH_TOL = 0.15
 
+currentOrientation = -1 #not an official orientation
+pegAngles = [0.,0.,0.,0.]
+
 def main():
 
 	rospy.init_node('tune')
 	
+	#move to an absolute location
+	#TODO
+
 	for currentString in range(0,1):
 		#check initial pitch
 		toPick('c')
@@ -51,6 +57,7 @@ def main():
 
 def toPick(state):
 	#move to and grab/set down pick. 'o' opens and 'c' closes
+
 	setOrientation(0)
 	moveLoc(PICK_APPROACH)
 	moveLoc(PICK_LOC)
@@ -60,6 +67,7 @@ def toPick(state):
 
 def toTuner(state):
 	#move to and grab/set down tuner. 'o' opens and 'c' closes
+
 	setOrientation(0)
 	moveLoc(TUNER_APPROACH)
 	moveLoc(TUNER_LOC)
@@ -68,6 +76,7 @@ def toTuner(state):
 	moveLoc(NEUTRAL_LOC)
 
 def pluck(currentString):
+
 	setOrientation(1)
 	moveLoc(STRING_APPROACH)
 	moveLoc(STRING_LOC[currentString])
@@ -79,13 +88,18 @@ def pluck(currentString):
 	return error
 
 def tune(currentString, error):
+	global pegAngles
 	PGAIN = 1
+
 	setOrientation(1)
 	moveLoc(HEAD_LOC)
 	moveLoc(PEG_APPROACH[currentString])
+	rotate(pegAngle[currentString])
+
 	moveLoc(PEG_LOC[currentString])
 	rad = PGAIN*error; #should really be some other function of error
 	rotate(rad)
+	pegAngle[currentString]+=rad
 	moveLoc(PEG_APPROACH[currentString])
 	moveLoc(HEAD_LOC)
 	moeLoc(NEUTRAL_LOC)
@@ -113,18 +127,23 @@ def moveLoc(locArray):
 		print "Service call failed: %s"%e
 
 def setOrientation(orient):
-	
-	msg = '-o '+ ORIENTATIONS[orient];
-	rospy.wait_for_service('move_to')
-	try:
-		grip_handle=rospy.ServiceProxy('move_to', MoveTo)
-		reply = grip_handle(msg)
-		return reply.response
-	except rospy.ServiceException, e:
-		print "Service call failed: %s"%e
+	global currentOrientation
+	if currentOrientation != orient:
+		msg = '-o '+ ORIENTATIONS[orient]
+		rospy.wait_for_service('move_to')
+		try:
+			grip_handle=rospy.ServiceProxy('move_to', MoveTo)
+			reply = grip_handle(msg)
+			currentOrientation = orient
+			return reply.response
+		except rospy.ServiceException, e:
+			print "Service call failed: %s"%e
 	
 def rotate(rad):
 	#Moves to a location defined by a 3 length array
+	global currentOrientation
+	currentOrientation = -1
+
 	rotation = '-R -T 0 0 0 0 0 '+str(rad)
 	rospy.wait_for_service('move_to')
 	try:
