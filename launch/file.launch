@@ -1,0 +1,20 @@
+<launch>
+	<arg name="setup_only" default="true"/>
+	<arg name="ar" default="false"/>
+	
+
+	<!--all the neccesary services-->
+	<node name="fetch" pkg="rosukulele" type="fetch.py"/>
+	<node name="pitches" pkg="rosukulele" type="getPitch.py"/>
+	<node name="gripper" pkg="rosukulele" type="gripper.py"/>
+	<node name="uku_tf_listener" pkg="rosukulele" type="transform.py"/>
+	<node name="tuner" pkg="rosukulele" type="tuner.py"/>
+    
+	<group if="$(arg ar)">
+		<include file="$(find rosukulele)/launch/ar_track.launch"/>
+	</group>
+
+	<group unless="$(arg setup_only)">
+		<node name="fetch" pkg="rosukulele" type="fetch.py"/>
+	</group>
+</launch>
