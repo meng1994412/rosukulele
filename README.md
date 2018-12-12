@@ -18,7 +18,7 @@ The goal of this package is to have a RethinkRobotics Sawyer robot autonomously 
 9. Repeat steps 1-8 until pitch error is below a specified tolerance
 10. Repeat steps 1-9 until on each of the 4 ukulele strings
 
-The expectation is to have a tuned ukulele at the end of the all of these steps. 
+The expectation is to have a tuned ukulele at the end of the all of these steps. This entire process can be ran by running the command `roslaunch rosukulele main.launch _ar:=true _setup_only:=false`
 
 ## Nodes
 
@@ -39,22 +39,26 @@ The expectation is to have a tuned ukulele at the end of the all of these steps.
 
 ## Service Files
 
-[GetPitch.srv](https://github.com/zigzaugg/rosukulele/blob/master/srv/GetPitch.srv) - This service file defines the `get_pitch` service. 
+[GetPitch.srv](https://github.com/zigzaugg/rosukulele/blob/master/srv/GetPitch.srv) - This service file defines the `get_pitch` service.
+
   int8 numSamples
   ---
   float32 pitch
 
-[Grip.srv](https://github.com/zigzaugg/rosukulele/blob/master/srv/Grip.srv) - This service file defines the `grip_pls` service. 
+[Grip.srv](https://github.com/zigzaugg/rosukulele/blob/master/srv/Grip.srv) - This service file defines the `grip_pls` service.
+
   string grip
   ---
   string success
 
-[MoveTo.srv](https://github.com/zigzaugg/rosukulele/blob/master/srv/MoveTo.srv) - This service file defines the `move_to` service. 
+[MoveTo.srv](https://github.com/zigzaugg/rosukulele/blob/master/srv/MoveTo.srv) - This service file defines the `move_to` service.
+
   string call
   ---
   string response
 
-[Transform.srv](https://github.com/zigzaugg/rosukulele/blob/master/srv/Transform.srv) - This service file defines the `transformation_matrix` service. 
+[Transform.srv](https://github.com/zigzaugg/rosukulele/blob/master/srv/Transform.srv) - This service file defines the `transformation_matrix` service.
+
   string call
   ---
   string response
