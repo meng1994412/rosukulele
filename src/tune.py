@@ -1,6 +1,9 @@
 #! /usr/bin/env python
 import rospy
 from rosukulele.srv import *
+import intera_interface
+head_display = intera_interface.HeadDisplay()
+
 OFFSET_ABSOLUTE = [0.000,0.015,0]
 
 NEUTRAL_LOC = [0,-0.25,0.4]
@@ -72,7 +75,7 @@ def main():
 	toTuner('c')
 	tune(0,1)
 	toTuner('o')
-
+	head_display.display_image("/Images/Israel3.png")
 
 
 def toPick(state):
@@ -97,6 +100,7 @@ def toTuner(state):
 
 def pluck(currentString):
 
+	head_display.display_image("/Images/Israel1.png")
 	setOrientation(1)
 	moveLoc(STRING_APPROACH)
 	moveLoc(STRING_LOC[currentString][0])
@@ -110,7 +114,7 @@ def pluck(currentString):
 def tune(currentString, error):
 	global pegAngles
 	PGAIN = 1
-
+	head_display.display_image("/Images/Israel2.png")
 	setOrientation(1)
 	moveLoc(HEAD_LOC)
 	moveLoc(PEG_APPROACH[currentString])
