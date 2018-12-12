@@ -1,7 +1,7 @@
 <launch>
 	<arg name="setup_only" default="true"/>
-	<arg name="ar" default="false"/>
-	
+	<arg name="ar" default="true"/>
+	<arg name="camera" default = "narrow_stereo"/>
 
 	<!--all the neccesary services-->
 	<node name="fetch" pkg="rosukulele" type="fetch.py"/>
@@ -9,12 +9,17 @@
 	<node name="gripper" pkg="rosukulele" type="gripper.py"/>
 	<node name="uku_tf_listener" pkg="rosukulele" type="transform.py"/>
 	<node name="tuner" pkg="rosukulele" type="tuner.py"/>
+
+	<node name="calibrate_cam" pkg="camera_info_manager_node" type="camera_info_manager_node">
+		<param name="url"	type="string"		value="file://$(dirname)/ost.yaml" />
+		<param name="cname"	type="string"		value="$(arg camera)" />
+	</node>
     
 	<group if="$(arg ar)">
 		<include file="$(find rosukulele)/launch/ar_track.launch"/>
 	</group>
 
 	<group unless="$(arg setup_only)">
-		<node name="fetch" pkg="rosukulele" type="fetch.py"/>
+		<node name="tune" pkg="rosukulele" type="tune.py"/>
 	</group>
 </launch>
