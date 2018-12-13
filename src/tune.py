@@ -9,8 +9,8 @@ OFFSET_ABSOLUTE = [0.000,0.015,0]
 NEUTRAL_LOC = [0,-0.25,0.4]
 ORIENTATIONS = ['0 1 0 0', '-0.5 -0.5 0.5 -0.5'] #0 down, 1 sideways
 
-STRING_APPROACH = [-0.02,-0.366,0.2]
-STRING_LOC = [[[-0.02, -0.363, 0.1467],[-0.02,-0.39,0.1467]],\
+STRING_APPROACH = [-0.046,-0.366,0.2]
+STRING_LOC = [[[-0.046, -0.375, 0.1343],[-0.02,-0.41,0.1343]],\
 	[[-0.02,-0.3614,0.1465],[-0.02,-0.385,0.1465]],\
 	[[-0.02,-0.3485,0.1465],[-0.02,-0.376,0.1465]],\
 	[[-0.02,-0.333,0.1465],[-0.02,-0.359,0.1465]]]
@@ -18,13 +18,13 @@ STRING_LOC = [[[-0.02, -0.363, 0.1467],[-0.02,-0.39,0.1467]],\
 PICK_APPROACH = [-0.1,0.035,0.43]
 PICK_LOC = [-0.1,0.046,0.21]
 
-TUNER_APPROACH = [-0.095,-0.05,0.43]
-TUNER_LOC = [-0.095,-0.035,0.205]
+TUNER_APPROACH = [-0.1,-0.05,0.43]
+TUNER_LOC = [-0.1,-0.04,0.205]
 
 HEAD_LOC = [0.25,-0.36,0.3]
 
-PEG_APPROACH = [[0.28,-0.45,0.073],[1,1,1],[2,2,2],[3,3,3],[4,4,4]]
-PEG_LOC = [[0.28,-0.39,0.07],[1,1,1],[2,2,2],[3,3,3],[4,4,4]]
+PEG_APPROACH = [[0.248,-0.435,0.06],[1,1,1],[2,2,2],[3,3,3],[4,4,4]]
+PEG_LOC = [[0.248,-0.413,0.06],[1,1,1],[2,2,2],[3,3,3],[4,4,4]]
 
 STRING_NAME = ['A', 'E', 'C', 'G']
 PITCHES = [69, 64, 60, 67]
@@ -60,22 +60,30 @@ def main():
 	# 	print("The "+STRING_NAME[currentString]+" String is in tune!")
 	#*************************************Grip blocks*************************************
 	# moveLoc(NEUTRAL_LOC)
+	# setOrientation(0)
 	# toPick('c')
 	# toPick("o")
 	# moveLoc(NEUTRAL_LOC)
 	# toTuner("c")
 	# toTuner("o")
 	# **************************************************************************************
+	tuned = False
+	angle = 0
 	moveLoc(NEUTRAL_LOC)
 	grip('o')
-	toPick('c')
-	print("Note Error")
-	print(pluck(0))
-	toPick('o')
-	toTuner('c')
-	tune(0,1)
-	toTuner('o')
-	head_display.display_image("/Images/Israel3.png")
+	while not tuned:
+		toPick('c')
+		print("Note Error")
+		note_err = pluck(0)
+		print(note_err)
+		toPick('o')
+		if note_err < 0.15 and note_err > -0.15:
+			tuned = True
+		else:
+			toTuner('c')
+			angle = tune(0,1,(angle))
+			toTuner('o')
+	head_display.display_image("/home/levi/sawyerws/src/rosukulele/Images/Israel2.png")
 
 
 def toPick(state):
@@ -100,7 +108,7 @@ def toTuner(state):
 
 def pluck(currentString):
 
-	head_display.display_image("/Images/Israel1.png")
+	head_display.display_image("/home/levi/sawyerws/src/rosukulele/Images/Israel1.png")
 	setOrientation(1)
 	moveLoc(STRING_APPROACH)
 	moveLoc(STRING_LOC[currentString][0])
@@ -111,22 +119,25 @@ def pluck(currentString):
 	moveLoc(NEUTRAL_LOC)
 	return error
 
-def tune(currentString, error):
+def tune(currentString, error,angle):
 	global pegAngles
-	PGAIN = 1
-	head_display.display_image("/Images/Israel2.png")
+	PGAIN = 1.6
+	head_display.display_image("/home/levi/sawyerws/src/rosukulele/Images/Israel3.png")
 	setOrientation(1)
 	moveLoc(HEAD_LOC)
 	moveLoc(PEG_APPROACH[currentString])
 	#rotate(pegAngle[currentString])
-
+	rotate(angle)
 	moveLoc(PEG_LOC[currentString])
 	rad = PGAIN*error; #should really be some other function of error
 	rotate(rad)
 	#pegAngle[currentString]+=rad
 	moveLoc(PEG_APPROACH[currentString])
+	rotate(-angle)
+	rotate(-rad)
 	moveLoc(HEAD_LOC)
 	moveLoc(NEUTRAL_LOC)
+	return rad
 
 def grip(state):
 	#closes or opens the gripper. 'o' opens and 'c' closes
