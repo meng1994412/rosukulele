@@ -70,7 +70,7 @@ After completing all of these steps, the expectation is to have a tuned ukulele,
 
 This printed object, along with the construced 1.5x1.5" pick holder can be seen in the image below.
 
-<img src="https://github.com/zigzaugg/rosukulele/blob/master/Images/Blocks.JPG.png">
+<img src="https://github.com/zigzaugg/rosukulele/blob/master/Images/Blocks.JPG">
 
 ## Israel Kamakawiwoʻole
 Not only was he the inspiration for this project, but three images of greatest Ukulele artist of all time were displayed on Sawyer's Head Display as a way of indicating what stage of the tuning process Sawyer was currently completing. 
