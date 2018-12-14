@@ -72,15 +72,15 @@ After completing all of these steps, the expectation is to have a tuned ukulele,
 Not only was he the inspiration for this project, but three images of greatest Ukulele artist of all time were displayed on Sawyer's Head Display as a way of indicating what stage of the tuning process Sawyer was currently completing. 
 This image was used to indicate Sawyer was plucking a string:
 
-<img src="https://github.com/zigzaugg/rosukulele/blob/master/src/israel_images/Israel1.png" width="35%">
+<img src="https://github.com/zigzaugg/rosukulele/blob/master/Images/Israel1.png" width="35%">
 
 This image was used to indicate Sawyer was tuning a peg:
 
-<img src="https://github.com/zigzaugg/rosukulele/blob/master/src/israel_images/Israel3.png" width="35%">
+<img src="https://github.com/zigzaugg/rosukulele/blob/master/Images/Israel3.png" width="35%">
 
 This image was used to indicate the string was in tune:
 
-<img src="https://github.com/zigzaugg/rosukulele/blob/master/src/israel_images/Israel2.png" width="35%">
+<img src="https://github.com/zigzaugg/rosukulele/blob/master/Images/Israel2.png" width="35%">
 
 ## Video
 
