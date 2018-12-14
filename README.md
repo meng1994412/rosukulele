@@ -35,11 +35,13 @@ After completing all of these steps, the expectation is to have a tuned ukulele,
 
 ## External Packages
 
-[camera_info_manager_node](https://github.com/NU-MSR/camera_info_manager_node) - This package provides a node, developed by Jarvis Schultz, that was used within our [main.launch](https://github.com/zigzaugg/rosukulele/blob/master/launch/main.launch) file to load our camera calibration data yaml file ([ost.yaml](https://github.com/zigzaugg/rosukulele/blob/master/launch/ost.yaml), located in the `/launch` directory for convenience) onto Sawyer's head camera's `camera_info` topic. This calibration was necessary to allow us to get more accurate alvar tag data.
+[camera_info_manager_node](https://github.com/NU-MSR/camera_info_manager_node) - This package, developed by Jarvis Schultz, provides a node that was used within our [main.launch](https://github.com/zigzaugg/rosukulele/blob/master/launch/main.launch) file to load our camera calibration data yaml file ([ost.yaml](https://github.com/zigzaugg/rosukulele/blob/master/launch/ost.yaml), located in the `/launch` directory for convenience) onto Sawyer's head camera's `camera_info` topic. This calibration was necessary to allow us to get more accurate alvar tag data.
+
+[ar_track_alvar](https://github.com/ros-perception/ar_track_alvar) - This package, developed by Scott Niekum, is a ROS wrapper fo [Alvar](http://virtual.vtt.fi/virtual/proj2/multimedia/index.html) which is an open source AR tracking library. We used this package to generate and subsequently identify and track an AR tag that we used as a reference frame to locate all other object in Sawyer's task space
 
 ## Messages
 
-[pitch.msg](https://github.com/zigzaugg/rosukulele/blob/master/msg/Pitch.msg) - This message is published by tuner and read by getPitch. It contains a single floa32 called pitch. 
+[pitch.msg](https://github.com/zigzaugg/rosukulele/blob/master/msg/Pitch.msg) - This message is published by tuner and read by getPitch. It contains a single float32 called pitch. 
 
 ## Service Files
 
