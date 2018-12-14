@@ -18,7 +18,7 @@ The goal of this package is to have a RethinkRobotics Sawyer robot autonomously 
 9. Repeat steps 1-8 until pitch error is below a specified tolerance
 10. Repeat steps 1-9 until on each of the 4 ukulele strings
 
-After completing all of these steps, the expectation is to have a tuned ukulele, fit for use by the great man himself, Israel Kamakawiwoʻole. This entire process can be initiated by running the command `roslaunch rosukulele main.launch _ar:=true _setup_only:=false`
+After completing all of these steps, the expectation is to have a tuned ukulele, fit for use by the great man himself, Israel Kamakawiwoʻole. This entire process can be initiated by running the command `roslaunch rosukulele main.launch`
 
 ## Nodes
 
@@ -60,13 +60,17 @@ After completing all of these steps, the expectation is to have a tuned ukulele,
 
 [ar_track.launch](https://github.com/zigzaugg/rosukulele/blob/master/launch/ar_track.launch) - This launch file is from ar_track_alvar. It launches all ar tracking related systems and if it can see the alvar tag, it publishes on the `/ar_track_pose` topic and connects it to the camera frame. It also open RVIZ which displays the tag  tf frame as well as the relevant Sawyer tf frames.
 
-[main.launch](https://github.com/zigzaugg/rosukulele/blob/master/launch/main.launch) - This launch file starts all nodes in this package except for `tune.py` by default. It accepts the argument `setup_only` that can be set to `false` to start `tune.py` as well. It also accepts the argument `ar` that can be set to true to also run `ar_track.launch`. It also open RVIZ which displays the tag  tf frame as well as the relevant Sawyer tf frames. This launch file can be run on its own to begin the enitre tuning process (as described above).
+[main.launch](https://github.com/zigzaugg/rosukulele/blob/master/launch/main.launch) - This launch file starts all nodes in this package except for `tune.py` by default. It accepts the argument `setup_only` that can be set to `true` to start without `tune.py` as well. It also accepts the argument `ar` that can be set to false to also run without `ar_track.launch`. It also open RVIZ which displays the tag  tf frame as well as the relevant Sawyer tf frames. This launch file can be run on its own to begin the enitre tuning process (as described above).
 
 ## STL files
 
 [PegHolder.stl](https://github.com/zigzaugg/rosukulele/blob/master/stl/PegHolder.stl) - This is the stl file (in mm) that is used to 3D print the custom tuner. It is designed to fit with minor clearance around a mitchell concert ukulele peg. 
 
 <img src="https://github.com/zigzaugg/rosukulele/blob/master/Images/TuningBlockSTL.png" width="40%">
+
+This printed object, along with the construced 1.5x1.5" pick holder can be seen in the image below.
+
+<img src="https://github.com/zigzaugg/rosukulele/blob/master/Images/Blocks.JPG.png">
 
 ## Israel Kamakawiwoʻole
 Not only was he the inspiration for this project, but three images of greatest Ukulele artist of all time were displayed on Sawyer's Head Display as a way of indicating what stage of the tuning process Sawyer was currently completing. 
