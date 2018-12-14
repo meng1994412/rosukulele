@@ -3,8 +3,8 @@ import rospy
 from rosukulele.srv import *
 import intera_interface
 import os
-dirname = os.path.dirname(__file__)
-filename = os.path.join(dirname, 'israel_images/')
+dirname = os.path.abspath(os.path.join(os.path.dirname(__file__),".."))
+filename = os.path.join(dirname, 'Images/')
 head_display = intera_interface.HeadDisplay()
 
 OFFSET_ABSOLUTE = [0.000,0.015,0]
@@ -86,7 +86,7 @@ def main():
 			toTuner('c')
 			angle = tune(0,1,(angle))
 			toTuner('o')
-	head_display.display_image(str(filename)+"/Israel2.png")
+	head_display.display_image(str(filename)+'Israel2.png')
 
 
 def toPick(state):
@@ -111,7 +111,7 @@ def toTuner(state):
 
 def pluck(currentString):
 
-	head_display.display_image(str(filename)+"/Israel1.png")
+	head_display.display_image(str(filename)+'Israel1.png')
 	setOrientation(1)
 	moveLoc(STRING_APPROACH)
 	moveLoc(STRING_LOC[currentString][0])
@@ -125,7 +125,7 @@ def pluck(currentString):
 def tune(currentString, error,angle):
 	global pegAngles
 	PGAIN = 1.6
-	head_display.display_image(str(filename)+"/Israel3.png")
+	head_display.display_image(str(filename)+'Israel3.png')
 	setOrientation(1)
 	moveLoc(HEAD_LOC)
 	moveLoc(PEG_APPROACH[currentString])
