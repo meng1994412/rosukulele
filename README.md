@@ -66,7 +66,7 @@ After completing all of these steps, the expectation is to have a tuned ukulele,
 
 [PegHolder.stl](https://github.com/zigzaugg/rosukulele/blob/master/stl/PegHolder.stl) - This is the stl file (in mm) that is used to 3D print the custom tuner. It is designed to fit with minor clearance around a mitchell concert ukulele peg. 
 
-![Tuning Block in OnShape](https://github.com/zigzaugg/rosukulele/blob/master/Images/TuningBlockSTL.png)
+<img src="https://github.com/zigzaugg/rosukulele/blob/master/Images/TuningBlockSTL.png" width="40%">
 
 ## Israel Kamakawiwoʻole
 Not only was he the inspiration for this project, but three images of greatest Ukulele artist of all time were displayed on Sawyer's Head Display as a way of indicating what stage of the tuning process Sawyer was currently completing. 
