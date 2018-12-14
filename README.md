@@ -70,7 +70,7 @@ After completing all of these steps, the expectation is to have a tuned ukulele,
 
 Below is a video of Sawyer successfully tuning the ukulele's A string to an A4.
 
-[![Sawyer Ukulele Tune](image_link_goes_here)](youtube_embed_link_goes_here "Sawyer Tuning a Ukulele")
+[![Sawyer Ukulele Tune](http://i3.ytimg.com/vi/4mWf8OjD35Y/maxresdefault.jpg)](https://www.youtube.com/watch?v=4mWf8OjD35Y&feature=youtu.be "Sawyer Tuning a Ukulele")
 
 
 
