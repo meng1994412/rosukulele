@@ -22,7 +22,7 @@ After completing all of these steps, the expectation is to have a tuned ukulele,
 
 ## Nodes
 
-[fetch.py](https://github.com/zigzaugg/rosukulele/blob/master/src/fetch.py) - This script starts the 'fetch' node and makes the 'move_to' service available. This node is built off of the `intera_examples` script `go_to_cartesian_pose.py`. Because of this, the service definition `MoveTo` accepts a call in the form of a string and parses arguements in the way the script it's built on used to parse command line arguements. 
+[fetch.py](https://github.com/zigzaugg/rosukulele/blob/master/src/fetch.py) - This script starts the 'fetch' node and makes the 'move_to' service available. This node is built off of the `intera_examples` script `go_to_cartesian_pose.py`. Because of this, the service definition `MoveTo` accepts a call in the form of a string and parses arguments in the way the script it's built on used to parse command line arguments. 
 
 [getPitch.py](https://github.com/zigzaugg/rosukulele/blob/master/src/getPitch.py) - This `pitches` node subscribes to the `/pitch` topic published by the `tuner`. It also establishes the service `get_pitch`. When the service is requested, it waits for 3 messages, then takes the pitch average of the next 3 messages and returns them. 
 
@@ -56,9 +56,9 @@ After completing all of these steps, the expectation is to have a tuned ukulele,
 
 ## Launch Files
 
-[ar_track.launch](https://github.com/zigzaugg/rosukulele/blob/master/launch/ar_track.launch) - This launch file is from ar_track_alvar. It launches all ar tracking related systems and if it can see the alvar tag, it publishes on the `/ar_track_pose` topic and connects it to the camera frame.
+[ar_track.launch](https://github.com/zigzaugg/rosukulele/blob/master/launch/ar_track.launch) - This launch file is from ar_track_alvar. It launches all ar tracking related systems and if it can see the alvar tag, it publishes on the `/ar_track_pose` topic and connects it to the camera frame. It also open RVIZ which displays the tag  tf frame as well as the relevant Sawyer tf frames.
 
-[main.launch](https://github.com/zigzaugg/rosukulele/blob/master/launch/main.launch) - This launch file starts all nodes in this package except for `tune.py` by default. It accpets the arguement `setup_only` that can be set to `false` to start `tune.py` as well. It also accepts the arguement `ar` that can be set to true to also run `ar_track.launch`. 
+[main.launch](https://github.com/zigzaugg/rosukulele/blob/master/launch/main.launch) - This launch file starts all nodes in this package except for `tune.py` by default. It accepts the argument `setup_only` that can be set to `false` to start `tune.py` as well. It also accepts the argument `ar` that can be set to true to also run `ar_track.launch`. It also open RVIZ which displays the tag  tf frame as well as the relevant Sawyer tf frames. This launch file can be run on its own to begin the enitre tuning process (as described above).
 
 ## STL files
 
@@ -66,9 +66,18 @@ After completing all of these steps, the expectation is to have a tuned ukulele,
 
 ![Tuning Block in OnShape](https://github.com/zigzaugg/rosukulele/blob/master/Images/TuningBlockSTL.png)
 
+## Israel Kamakawiwoʻole
+Not only was he the inspiration for this project, but three images of greatest Ukulele artist of all time were displayed on Sawyer's Head Display as a way of indicating what stage of the tuning process Sawyer was currently completing. 
+This image was used to indicate Sawyer was plucking a string:
+![pluck](https://github.com/zigzaugg/rosukulele/blob/master/src/israel_images/Israel1.png =250x)
+This image was used to indicate Sawyer was tuning a peg:
+![tune](https://github.com/zigzaugg/rosukulele/blob/master/src/israel_images/Israel2.png =250x)
+This image was used to indicate the string was in tune:
+![happy](https://github.com/zigzaugg/rosukulele/blob/master/src/israel_images/Israel3.png =250x)
+
 ## Video
 
-Below is a video of Sawyer successfully tuning the ukulele's A string to an A4.
+Below is a link to video of Sawyer successfully tuning the ukulele's A string to an A4 note within 15 cents.
 
 [![Sawyer Ukulele Tune](http://i3.ytimg.com/vi/4mWf8OjD35Y/maxresdefault.jpg)](https://www.youtube.com/watch?v=4mWf8OjD35Y&feature=youtu.be "Sawyer Tuning a Ukulele")
 
