@@ -5,7 +5,7 @@
 
 ## Introduction
 
-The goal of this package is to have a RethinkRobotics Sawyer robot autonomously tune a ukulele. The ukulele, a custom pick, and a custom tunig peg are all in designated locations on a platform along with an alvar tag. Sawyer senses the alvar tag and by nowing the relative locations of each of its needed tools, it tunes the ukulele. The main pattern occurs like this:
+The goal of this package is to have a RethinkRobotics Sawyer robot autonomously tune a ukulele. The ukulele, a custom pick, and a custom tuning peg are all placed in pre-designated locations on a platform along with an alvar tag. Using the built-in head camera, Sawyer senses the alvar tag and knows the relative locations of each of the aforemetnioned tools, it tunes the ukulele. The tuning process can be broken down into the following pattern:
 
 1. Pick up the pick
 2. Pluck the designated ukulele string
@@ -18,7 +18,7 @@ The goal of this package is to have a RethinkRobotics Sawyer robot autonomously 
 9. Repeat steps 1-8 until pitch error is below a specified tolerance
 10. Repeat steps 1-9 until on each of the 4 ukulele strings
 
-The expectation is to have a tuned ukulele at the end of the all of these steps. This entire process can be ran by running the command `roslaunch rosukulele main.launch _ar:=true _setup_only:=false`
+After completing all of these steps, the expectation is to have a tuned ukulele, fit for use by the great man himself, Israel Kamakawiwoʻole. This entire process can be initiated by running the command `roslaunch rosukulele main.launch _ar:=true _setup_only:=false`
 
 ## Nodes
 
@@ -60,10 +60,11 @@ The expectation is to have a tuned ukulele at the end of the all of these steps.
 
 ![Tuning Block in OnShape](https://github.com/zigzaugg/rosukulele/blob/master/Images/TuningBlockSTL.png)
 
+## Video
 
+Below is a video of Sawyer successfully tuning the ukulele's A string to an A4.
 
-
-
+[![Sawyer Ukulele Tune](image_link_goes_here)](youtube_embed_link_goes_here "Sawyer Tuning a Ukulele")
 
 
 
