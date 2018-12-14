@@ -22,6 +22,8 @@ After completing all of these steps, the expectation is to have a tuned ukulele,
 
 ## Nodes
 
+[tune.py](https://github.com/zigzaugg/rosukulele/blob/master/src/tune.py) - This node is used as the main control node of the process. It defines the relative (to the ar tag) locations of all the tools in robot's task space. It further defines the service calls, to the services initiated in the other nodes, in such a way so as to achieve the tuning of the Ukulele. It controls what stage of the tuning process to complete and in what order to do so.
+
 [fetch.py](https://github.com/zigzaugg/rosukulele/blob/master/src/fetch.py) - This script starts the 'fetch' node and makes the 'move_to' service available. This node is built off of the `intera_examples` script `go_to_cartesian_pose.py`. Because of this, the service definition `MoveTo` accepts a call in the form of a string and parses arguments in the way the script it's built on used to parse command line arguments. 
 
 [getPitch.py](https://github.com/zigzaugg/rosukulele/blob/master/src/getPitch.py) - This `pitches` node subscribes to the `/pitch` topic published by the `tuner`. It also establishes the service `get_pitch`. When the service is requested, it waits for 3 messages, then takes the pitch average of the next 3 messages and returns them. 
@@ -70,15 +72,15 @@ After completing all of these steps, the expectation is to have a tuned ukulele,
 Not only was he the inspiration for this project, but three images of greatest Ukulele artist of all time were displayed on Sawyer's Head Display as a way of indicating what stage of the tuning process Sawyer was currently completing. 
 This image was used to indicate Sawyer was plucking a string:
 
-<img src="https://github.com/zigzaugg/rosukulele/blob/master/src/israel_images/Israel1.png" width="40%">
+<img src="https://github.com/zigzaugg/rosukulele/blob/master/src/israel_images/Israel1.png" width="35%">
 
 This image was used to indicate Sawyer was tuning a peg:
 
-<img src="https://github.com/zigzaugg/rosukulele/blob/master/src/israel_images/Israel3.png" width="40%">
+<img src="https://github.com/zigzaugg/rosukulele/blob/master/src/israel_images/Israel3.png" width="35%">
 
 This image was used to indicate the string was in tune:
 
-<img src="https://github.com/zigzaugg/rosukulele/blob/master/src/israel_images/Israel2.png" width="40%">
+<img src="https://github.com/zigzaugg/rosukulele/blob/master/src/israel_images/Israel2.png" width="35%">
 
 ## Video
 
