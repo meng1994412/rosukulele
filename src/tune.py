@@ -2,6 +2,9 @@
 import rospy
 from rosukulele.srv import *
 import intera_interface
+import os
+dirname = os.path.dirname(__file__)
+filename = os.path.join(dirname, 'israel_images/')
 head_display = intera_interface.HeadDisplay()
 
 OFFSET_ABSOLUTE = [0.000,0.015,0]
@@ -10,7 +13,7 @@ NEUTRAL_LOC = [0,-0.25,0.4]
 ORIENTATIONS = ['0 1 0 0', '-0.5 -0.5 0.5 -0.5'] #0 down, 1 sideways
 
 STRING_APPROACH = [-0.046,-0.366,0.2]
-STRING_LOC = [[[-0.046, -0.375, 0.1343],[-0.02,-0.41,0.1343]],\
+STRING_LOC = [[[-0.046, -0.365, 0.1375],[-0.02,-0.41,0.1375]],\
 	[[-0.02,-0.3614,0.1465],[-0.02,-0.385,0.1465]],\
 	[[-0.02,-0.3485,0.1465],[-0.02,-0.376,0.1465]],\
 	[[-0.02,-0.333,0.1465],[-0.02,-0.359,0.1465]]]
@@ -24,7 +27,7 @@ TUNER_LOC = [-0.1,-0.04,0.205]
 HEAD_LOC = [0.25,-0.36,0.3]
 
 PEG_APPROACH = [[0.248,-0.435,0.06],[1,1,1],[2,2,2],[3,3,3],[4,4,4]]
-PEG_LOC = [[0.248,-0.413,0.06],[1,1,1],[2,2,2],[3,3,3],[4,4,4]]
+PEG_LOC = [[0.248,-0.413,0.06],[1,1,1],[2,2,2],[3,3,3],[4,4,4]] #Only peg 1 has real data
 
 STRING_NAME = ['A', 'E', 'C', 'G']
 PITCHES = [69, 64, 60, 67]
@@ -83,7 +86,7 @@ def main():
 			toTuner('c')
 			angle = tune(0,1,(angle))
 			toTuner('o')
-	head_display.display_image("/home/levi/sawyerws/src/rosukulele/Images/Israel2.png")
+	head_display.display_image(str(filename)+"/Israel2.png")
 
 
 def toPick(state):
@@ -108,7 +111,7 @@ def toTuner(state):
 
 def pluck(currentString):
 
-	head_display.display_image("/home/levi/sawyerws/src/rosukulele/Images/Israel1.png")
+	head_display.display_image(str(filename)+"/Israel1.png")
 	setOrientation(1)
 	moveLoc(STRING_APPROACH)
 	moveLoc(STRING_LOC[currentString][0])
@@ -122,7 +125,7 @@ def pluck(currentString):
 def tune(currentString, error,angle):
 	global pegAngles
 	PGAIN = 1.6
-	head_display.display_image("/home/levi/sawyerws/src/rosukulele/Images/Israel3.png")
+	head_display.display_image(str(filename)+"/Israel3.png")
 	setOrientation(1)
 	moveLoc(HEAD_LOC)
 	moveLoc(PEG_APPROACH[currentString])

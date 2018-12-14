@@ -22,7 +22,7 @@ After completing all of these steps, the expectation is to have a tuned ukulele,
 
 ## Nodes
 
-[fetch.py](https://github.com/zigzaugg/rosukulele/blob/master/src/fetch.py) - This script starts the 'fetch' node and makes the 'move_to' service available. This node is built off of the `intera_examples` script `go_to_cartesian.py`. Because of this, the service definition `MoveTo` accpets a call in the form of a string and parses arguements in the way the script it's built on used to parse command line arguements. 
+[fetch.py](https://github.com/zigzaugg/rosukulele/blob/master/src/fetch.py) - This script starts the 'fetch' node and makes the 'move_to' service available. This node is built off of the `intera_examples` script `go_to_cartesian_pose.py`. Because of this, the service definition `MoveTo` accepts a call in the form of a string and parses arguements in the way the script it's built on used to parse command line arguements. 
 
 [getPitch.py](https://github.com/zigzaugg/rosukulele/blob/master/src/getPitch.py) - This `pitches` node subscribes to the `/pitch` topic published by the `tuner`. It also establishes the service `get_pitch`. When the service is requested, it waits for 3 messages, then takes the pitch average of the next 3 messages and returns them. 
 
@@ -30,8 +30,12 @@ After completing all of these steps, the expectation is to have a tuned ukulele,
 
 [transform.py](https://github.com/zigzaugg/rosukulele/blob/master/src/transform.py) - This `uku_tf_listener` node creates the `transformation_matrix` service. The service accepts a string that corresponds to x y z coordinates in the frame created by the alvar tag (often reffered to as the `/Ukulele` frame but really called `/ar_marker_2`) and uses `tf.LookupTransform` to convert these coordinates into the base frame. It returns these coordinate in the `/base` frame.
 
-[tuner.py](https://github.com/zigzaugg/rosukulele/blob/master/src/tuner.py) - This `tuner` node is adapted from [python-tuner](https://github.com/mzucker/python-tuner) by Mark Zucker. It uses fourrier transforms on every 0.1s of audio to get the dominant pitch and publishes this on the `/pitch` topic. 
-[tune.py](https://github.com/zigzaugg/rosukulele/blob/master/src/tune.py) -
+[tuner.py](https://github.com/zigzaugg/rosukulele/blob/master/src/tuner.py) - This `tuner` node is adapted from [python-tuner](https://github.com/mzucker/python-tuner) by Mark Zucker. It uses Fourier transforms on every 0.1s of audio to get the dominant pitch and publishes this on the `/pitch` topic. 
+[tune.py](https://github.com/zigzaugg/rosukulele/blob/master/src/tune.py)
+
+## External Packages
+
+[camera_info_manager_node](https://github.com/NU-MSR/camera_info_manager_node) - This package provides a node, developed by Jarvis Schultz, that was used within our [main.launch](https://github.com/zigzaugg/rosukulele/blob/master/launch/main.launch) file to load our camera calibration data yaml file ([ost.yaml](https://github.com/zigzaugg/rosukulele/blob/master/launch/ost.yaml), located in the `/launch` directory for convenience) onto Sawyer's head camera's `camera_info` topic. This calibration was necessary to allow us to get more accurate alvar tag data.
 
 ## Messages
 
